@@ -1,0 +1,92 @@
+#+TITLE: README
+#+DESCRIPTION: xnde README
+#+AUTHOR: Michael Herstine
+#+EMAIL: sp1ff@pobox.com
+#+DATE: <2020-05-06 Wed 16:47>
+#+AUTODATE: t
+
+* Introduction
+
+[[https://github.com/sp1ff/xnde][xnde]] is a small Rust program that extracts the contents of your [[https://winamp.com][Winamp]] Music Library database. The term "NDE" refers to the [[http://wiki.winamp.com/wiki/Nullsoft_Database_Engine][Nullsoft Database Engine]], so "xnde" could stand for "eX-NDE", or "eXtract from NDE", or even "eXtricate yourself from NDE."
+
+xnde does _not_ fully re-implement the NDE in Rust; it will simply read the main table from your Media Library Database & dump the data into a (hopefully more useful) format.
+
+* Installation
+
+I hope to publish this to [[https://crates.io][crates.io]] but for now it's the usual Autotools dance:
+
+#+BEGIN_SRC bash
+cd /tmp
+curl -O https://www.unwoundstack.com/dist/xnde-0.1.0.tar.xz
+tar xf xnde-0.1.0.tar.xz
+cd xnde-0.1.0
+./configure
+make
+make check
+sudo make install
+#+END_SRC
+
+* Usage
+
+The tool provides two sub-commands: =dump= & =export=.
+
+** Dumping Your Music Library Database
+
+This provides a very crude dump of your database to =stdout=. TBH, its primary use is debugging & trouble-shooting the tool.
+
+#+BEGIN_SRC bash
+$>: xnde dump main.idx main.dat
+There are 2 indicies.
+Each index has 6107 records.
+Column: ID 0, size: 11, prev: 0x0000, next: 0x0021, FILENAME, filename
+Column: ID 1, size: 8, prev: 0x0008, next: 0x0037, STRING, title
+...
+ID 255, size: 13, prev: 0x0000, next: 0x03f9, pos: 4294967295, type: -1, name: None
+ID 0, size: 17, prev: 0x03de, next: 0x0000, pos: 0, type: 12, name: filename
+ID 0, size: 112, prev: 0x0000, next: 0x0496 C:\space\grabpcasts\@Context\atcontext_0906_102709.mp3 "C:\\space\\grabpcasts\\@Context\\atcontext_0906_102709.mp3"
+ID 1, size: 56, prev: 0x0418, next: 0x04dc Episode 14: Augusto Pinaud
+ID 2, size: 62, prev: 0x0496, next: 0x0528 http://atcontext.blogspot.com
+...
+#+END_SRC
+
+** Exporting Your Music Library Databaes
+
+This is the more useful sub-command: it will read your database, instantiate a =Track= for each record, then serialize the resulting collection to either JSON or LISP-style S-expressions (using [[https://crates.io/crates/serde_json][serde_json]] or [[https://crates.io/crates/serde-lexpr][serde-lexpr]], respectively):
+
+#+BEGIN_SRC bash
+$>: xnde export -f sexp -o out.el main.idx main.dat
+Creating 6526 Tracks...
+Creating 6526 Tracks...done.
+Writing out.el...
+Writing out.el...done.
+#+END_SRC
+
+* Discussion
+
+** Background
+
+*** What the Heck is "Winamp"?
+
+In April 1997 Justin Frankel and Dmitry Boldyrev released Winamp, a small, performant Windows MP3 player. Frankel formed Nullsoft in January 1998. With version 1.5, Winamp changed from freeware to shareware & charged a ten dollar registration fee; far from dampening uptake, this brought in $100,000 a month from $10 paper checks in the mail from paying users. Winamp 2.0 was released in September 1998 & became one of the most downloaded Windows programs ever.
+
+One of the things that endeared Winamp to its users was its plugin architecture. Nullsoft provided several plugins as part of the standard distribution, one of which was the Music Library. Using this, one could manage, organize, search & play a personal library of thousands of MP3 files.
+
+Nullsoft was (in)famously acquired by AOL in 1999. By 2000 Winamp had been registered twenty-five million times, but Nullsoft began to struggle with the problems of so many AOL acquisitions. 2002 saw the misbegotten release of Winamp 3, a complete re-write that broke with the prior ethos of tight, lightweight code. Widespread incidence of users (including the author) reverting to Winamp 2 in response to the poor performance & high resource demands of Winamp 3 led to Nullsoft continuing 2.x development, and eventually the release of Winamp 5 (2+3) late in 2003. From version 5.2, Winamp provided the ability to sync the user's library with iPods, which led to many iPod owners' (again including the author) choosing to use Winamp instead of iTunes to manage their devices.
+
+The original Winamp team quit AOL in 2004 & development moved to Dulles (VA). Work continued, albeit at a slower pace. With the release of Winamp 5.66 in late 2013, AOL announced that winamp.com would be shutdown later that year and that the software would no longer be available for download. It was later announced that Nullsoft (along with Shoutcast, an MP3 streaming platform) had been sold to the Belgian company Radionomy. As of the time of this writing, winamp.com is up, and offering a download of Winamp 5.8 (beta) from Radionomy.
+
+*** Why Did I Write This?
+
+It is a credit to Winamp that it remained usable well into the twenty-teens as a way to mange large libraries of '.mp3' files.  Winamp is not quite dead, but it is stranded on an operating system that I have left behind (along, I suspect, with many other technically-inclined music aficionados today). I wanted to pull the information (playcounts, ratings &c) I had accumulated in my Music Library database out of its proprietary format & into new applications ([[https://www.musicpd.org/][mpd]], for instance).
+
+*** Why Did I Have to Reverse Engineer the Format?
+
+I was able to locate a copy of the Winamp SDK, which contained the C++ NDE implementation. It wouldn't compile on Linux, so I dug into the code to see if I could port it. After scrubbing my eyeballs, I decided that since I didn't need a fully functional implementation (just a reader), and since the on-disk format was really pretty clean, the quickest way to achieve my aim would be to just reverse engineer the file format.
+
+I had some help: [[http://gutenberg.free.fr/fichiers/SDK%20Winamp/nde_specs_v1.txt][this]] was a good starting point, although I think it refers to an early version of the format (in this reference, each index entry is only four bytes). [[http://forums.winamp.com/showthread.php?t=196297][This]] thread on the old Winamp forums was really useful, and includes a C++ NDE client.
+
+** Other Options
+
+  - [[https://github.com/daniel15/ndephp][ndephp]]: a similar implementation, in PHP
+  - [[https://github.com/Wiiseguy/node-nde][node-nde]]: an implementation in node.js
+  - [[http://blog.stef.be/winamp_database][implementation]] in Delphi
