@@ -173,7 +173,7 @@ against the Win32 API and (seemingly) ported to MacOS, but never Linux.",
         .arg(
             Arg::with_name("verbose")
                 .short('v')
-                .help("Produce more copious output."),
+                .about("Produce more copious output."),
         )
         .subcommand(
             App::new("dump")
@@ -185,7 +185,7 @@ contents to stdout. Useful for exploring & trouble-shooting.",
                 .arg(
                     Arg::with_name("format")
                         .short('f')
-                        .help("Format in which your Muic Library shall be printed")
+                        .about("Format in which your Muic Library shall be printed")
                         .takes_value(true)
                         .possible_values(&["display", "sexp", "json"])
                         .default_value("display")
@@ -193,14 +193,14 @@ contents to stdout. Useful for exploring & trouble-shooting.",
                 )
                 .arg(
                     Arg::with_name("index")
-                        .help("NDE index file (`main.idx', e.g.)")
+                        .about("NDE index file (`main.idx', e.g.)")
                         .index(1)
                         .requires("data")
                         .required(true),
                 )
                 .arg(
                     Arg::with_name("data")
-                        .help("corresponding NDE data file (`main.dat', e.g.)")
+                        .about("corresponding NDE data file (`main.dat', e.g.)")
                         .index(2)
                         .required(true),
                 ),
@@ -217,7 +217,7 @@ one of a few formats for subsequent use.",
                 .arg(
                     Arg::with_name("output")
                         .short('o')
-                        .help(
+                        .about(
                             "file to which the serlialized form of your Winamp Music Library shall
 be written",
                         )
@@ -228,7 +228,7 @@ be written",
                 .arg(
                     Arg::with_name("format")
                         .short('f')
-                        .help("Format to which your Muic Library shall be serialized")
+                        .about("Format to which your Muic Library shall be serialized")
                         .takes_value(true)
                         // TODO(sp1ff): add more output formats
                         .possible_values(&["sexp", "json"])
@@ -237,14 +237,14 @@ be written",
                 )
                 .arg(
                     Arg::with_name("index")
-                        .help("NDE index file (`main.idx', e.g.)")
+                        .about("NDE index file (`main.idx', e.g.)")
                         .index(1)
                         .requires("data")
                         .required(true),
                 )
                 .arg(
                     Arg::with_name("data")
-                        .help("corresponding NDE data file (`main.dat', e.g.)")
+                        .about("corresponding NDE data file (`main.dat', e.g.)")
                         .index(2)
                         .required(true),
                 ),

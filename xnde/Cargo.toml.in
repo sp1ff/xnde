@@ -3,10 +3,17 @@ name = "xnde"
 version = "@PACKAGE_VERSION@"
 authors = ["@PACKAGE_AUTHOR@"]
 edition = "2018"
+license = "GPL-3.0-or-later"
+description = "eXtract your data from the Winamp Music Library"
+homepage = "https://github.com/sp1ff/xnde"
+repository = "https://github.com/sp1ff/xnde"
+readme = "README.md"
+keywords = ["cli", "music", "utility", "winamp", "nde"]
+categories = ["command-line-utilities", "database"]
 
 [dependencies]
 backtrace = "0.3"
-clap = { git = "https://github.com/clap-rs/clap/", rev = "0293fd7c" }
+clap = "3.0.0-beta.1"
 log = "0.4.8"
 log4rs = "0.10.0"
 parse-display = "0.1.1"

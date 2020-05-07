@@ -98,13 +98,15 @@ dependencies = [
 [[package]]
 name = "clap"
 version = "3.0.0-beta.1"
-source = "git+https://github.com/clap-rs/clap/?rev=0293fd7c#0293fd7c4a6aa5cc4a12ed2dbfa03c6220446fb8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "860643c53f980f0d38a5e25dfab6c3c93b2cb3aa1fe192643d17a293c6c41936"
 dependencies = [
  "atty",
  "bitflags",
  "clap_derive",
  "indexmap",
  "lazy_static",
+ "os_str_bytes",
  "strsim",
  "termcolor",
  "textwrap",
@@ -115,7 +117,8 @@ dependencies = [
 [[package]]
 name = "clap_derive"
 version = "3.0.0-beta.1"
-source = "git+https://github.com/clap-rs/clap/?rev=0293fd7c#0293fd7c4a6aa5cc4a12ed2dbfa03c6220446fb8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb51c9e75b94452505acd21d929323f5a5c6c4735a852adbd39ef5fb1b014f30"
 dependencies = [
  "heck",
  "proc-macro-error",
@@ -375,6 +378,12 @@ checksum = "18869315e81473c951eb56ad5558bbc56978562d3ecfb87abb7a1e944cea4518"
 dependencies = [
  "num-traits",
 ]
+
+[[package]]
+name = "os_str_bytes"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ced912e1439b63a8172b943887c33373f226a4a9cfab95d09c0e3c44851d04d4"
 
 [[package]]
 name = "parse-display"
@@ -743,7 +752,7 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "xnde"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "backtrace",
  "clap",

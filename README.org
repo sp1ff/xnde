@@ -2,7 +2,7 @@
 #+DESCRIPTION: xnde README
 #+AUTHOR: Michael Herstine
 #+EMAIL: sp1ff@pobox.com
-#+DATE: <2020-05-06 Wed 16:47>
+#+DATE: <2020-05-07 Thu 11:42>
 #+AUTODATE: t
 
 * Introduction
@@ -17,9 +17,9 @@ I hope to publish this to [[https://crates.io][crates.io]] but for now it's the 
 
 #+BEGIN_SRC bash
 cd /tmp
-curl -O https://www.unwoundstack.com/dist/xnde-0.1.0.tar.xz
-tar xf xnde-0.1.0.tar.xz
-cd xnde-0.1.0
+curl -O https://www.unwoundstack.com/dist/xnde-0.1.1.tar.xz
+tar xf xnde-0.1.1.tar.xz
+cd xnde-0.1.1
 ./configure
 make
 make check
