@@ -1,3 +1,7 @@
+2020-11-19  Michael Herstine  <sp1ff@pobox.com>
+
+	Cleanup; somehow I managed to not commit 'configure.ac' last time.
+
 2020-05-07  Michael Herstine  <sp1ff@pobox.com>
 
 	Preparing for publication to crates.io.
