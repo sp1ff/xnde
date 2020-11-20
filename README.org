@@ -2,7 +2,7 @@
 #+DESCRIPTION: xnde README
 #+AUTHOR: Michael Herstine
 #+EMAIL: sp1ff@pobox.com
-#+DATE: <2020-05-07 Thu 11:42>
+#+DATE: <2020-11-20 Fri 08:33>
 #+AUTODATE: t
 
 * Introduction
@@ -13,7 +13,8 @@ xnde does _not_ fully re-implement the NDE in Rust; it will simply read the main
 
 * Installation
 
-I hope to publish this to [[https://crates.io][crates.io]] but for now it's the usual Autotools dance:
+[[https://github.com/sp1ff/xnde][xnde]] is [[https://crates.io/crates/xnde][available]] on [[https://crates.io][crates.io]], but you can also install it via the
+usual Autotools incantation
 
 #+BEGIN_SRC bash
 cd /tmp
@@ -26,6 +27,15 @@ make check
 sudo make install
 #+END_SRC
 
+or build from source:
+
+#+BEGIN_SRC bash
+git clone https://github.com/sp1ff/xnde.git
+cd xnde
+./bootstrap
+./configure && make all check
+sudo make isntall
+#+END_SRC
 * Usage
 
 The tool provides two sub-commands: =dump= & =export=.
