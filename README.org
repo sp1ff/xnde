@@ -2,7 +2,7 @@
 #+DESCRIPTION: xnde README
 #+AUTHOR: Michael Herstine
 #+EMAIL: sp1ff@pobox.com
-#+DATE: <2020-11-20 Fri 08:33>
+#+DATE: <2023-04-29 Sat 18:19>
 #+AUTODATE: t
 
 * Introduction
@@ -18,9 +18,9 @@ usual Autotools incantation
 
 #+BEGIN_SRC bash
 cd /tmp
-curl -O https://www.unwoundstack.com/dist/xnde-0.1.1.tar.xz
-tar xf xnde-0.1.1.tar.xz
-cd xnde-0.1.1
+curl -O https://www.unwoundstack.com/dist/xnde-0.1.3.tar.xz
+tar xf xnde-0.1.3.tar.xz
+cd xnde-0.1.3
 ./configure
 make
 make check
