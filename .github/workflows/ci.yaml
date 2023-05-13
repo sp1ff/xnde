@@ -95,7 +95,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        cd pin
+        cd xnde
         stderr="$(find target/release -name stderr -print0 | xargs -0 ls -t | head -n1)"
         if [ -s "$stderr" ]; then
           echo "===== $stderr ===== "
