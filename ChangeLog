@@ -1,4 +1,17 @@
-2020-11-19  Michael Herstine  <sp1ff@pobox.com>
+2023-05-10  Michael Herstine  <sp1ff@pobox.com>
+
+	Release 0.1.3
+	This commit:
+
+	    - upgrades `xnde` to clap v4
+	    - updates copyrights throughout
+	    - updates crate dependencies
+
+2023-04-29  Michael Herstine  <sp1ff@pobox.com>
+
+	Update dependencies
+
+2020-11-20  Michael Herstine  <sp1ff@pobox.com>
 
 	Cleanup; somehow I managed to not commit 'configure.ac' last time.
 

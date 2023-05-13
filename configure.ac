@@ -1,7 +1,7 @@
-AC_INIT([xnde], [0.1.2], [sp1ff@pobox.com])
+AC_INIT([xnde], [0.1.3], [sp1ff@pobox.com])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([xnde/Cargo.toml.in])
-AM_INIT_AUTOMAKE([-Wall -Werror -Wno-portability -Wno-override gnits std-options dist-bzip2 dist-xz])
+AM_INIT_AUTOMAKE([-Wall -Werror -Wno-portability -Wno-override gnits std-options dist-xz dist-zstd])
 
 AC_CHECK_PROG(CARGO, [cargo], [yes], [no])
 AS_IF(test x$CARGO = xno,

@@ -14,7 +14,7 @@ exclude = ["Cargo.toml.in", "Makefile", "Makefile.in"]
 
 [dependencies]
 backtrace = "0.3"
-clap = "3.0.0-beta.1"
+clap = "4.2.5"
 log = "0.4.8"
 log4rs = "0.10.0"
 os_str_bytes = "2.4.0"

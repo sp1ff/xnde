@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Michael Herstine <sp1ff@pobox.com>
+// Copyright (C) 2020-2023 Michael Herstine <sp1ff@pobox.com>
 //
 // This file is part of xnde.
 //
@@ -25,6 +25,7 @@ mod vars;
 
 use xnde::{dump, export, DumpFormat, ExportFormat};
 
+use clap::{value_parser, Arg, Command};
 use log::LevelFilter;
 use log4rs::{
     append::console::{ConsoleAppender, Target},
@@ -40,7 +41,7 @@ use log4rs::{
 use parse_display::Display;
 
 use std::convert::TryFrom;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                         app error type                                         //
@@ -159,9 +160,8 @@ impl std::convert::From<log::SetLoggerError> for Error {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn main() -> Result<(), Error> {
-    use clap::{App, Arg};
     use vars::{AUTHOR, VERSION};
-    let matches = App::new("xnde")
+    let matches = Command::new("xnde")
         .version(VERSION)
         .author(AUTHOR)
         .about("xnde -- eXtricate your music library from the Nullsoft Database Engine")
@@ -171,42 +171,46 @@ and exporting the data into other formats. The Nullsoft Database Engine (NDE) wa
 against the Win32 API and (seemingly) ported to MacOS, but never Linux.",
         )
         .arg(
-            Arg::with_name("verbose")
+            Arg::new("verbose")
                 .short('v')
-                .about("Produce more copious output."),
+                .long("verbose")
+                .help("Produce more copious output.")
+                .required(false)
+                .num_args(0),
         )
         .subcommand(
-            App::new("dump")
+            Command::new("dump")
                 .about("dump the contents of a Winamp Music Library")
                 .long_about(
                     "Walk the contents of a single NDE table ('main', presumably) & dump its
 contents to stdout. Useful for exploring & trouble-shooting.",
                 )
                 .arg(
-                    Arg::with_name("format")
+                    Arg::new("format")
+                        .long("format")
                         .short('f')
-                        .about("Format in which your Muic Library shall be printed")
-                        .takes_value(true)
-                        .possible_values(&["display", "sexp", "json"])
-                        .default_value("display")
-                        .value_name("FORMAT"),
+                        .help("Format in which your Muic Library shall be printed")
+                        .num_args(1)
+                        .default_value("display"),
                 )
                 .arg(
-                    Arg::with_name("index")
-                        .about("NDE index file (`main.idx', e.g.)")
+                    Arg::new("index")
+                        .help("NDE index file (`main.idx', e.g.)")
                         .index(1)
                         .requires("data")
-                        .required(true),
+                        .required(true)
+                        .value_parser(value_parser!(std::path::PathBuf)),
                 )
                 .arg(
-                    Arg::with_name("data")
-                        .about("corresponding NDE data file (`main.dat', e.g.)")
+                    Arg::new("data")
+                        .help("corresponding NDE data file (`main.dat', e.g.)")
                         .index(2)
-                        .required(true),
+                        .required(true)
+                        .value_parser(value_parser!(std::path::PathBuf)),
                 ),
         )
         .subcommand(
-            App::new("export")
+            Command::new("export")
                 .about("export the contents of a Winamp Music Library")
                 .long_about(
                     "Walk the contents of the NDE 'main' table. For each record therein, transform
@@ -215,43 +219,44 @@ associated metadata: playcount, rating, last played, &c). Serialize the entire c
 one of a few formats for subsequent use.",
                 )
                 .arg(
-                    Arg::with_name("output")
+                    Arg::new("output")
                         .short('o')
-                        .about(
+                        .help(
                             "file to which the serlialized form of your Winamp Music Library shall
 be written",
                         )
-                        .takes_value(true)
+                        .num_args(1)
                         .default_value("main.out")
-                        .value_name("FILE"),
+                        .value_parser(value_parser!(PathBuf)), // .value_name("FILE"),
                 )
                 .arg(
-                    Arg::with_name("format")
+                    Arg::new("format")
+                        .long("format")
                         .short('f')
-                        .about("Format to which your Muic Library shall be serialized")
-                        .takes_value(true)
+                        .help("Format to which your Music Library shall be serialized")
+                        .num_args(1)
                         // TODO(sp1ff): add more output formats
-                        .possible_values(&["sexp", "json"])
-                        .default_value("sexp")
-                        .value_name("FORMAT"),
+                        .default_value("sexp"), // .value_name("FORMAT")
                 )
                 .arg(
-                    Arg::with_name("index")
-                        .about("NDE index file (`main.idx', e.g.)")
+                    Arg::new("index")
+                        .help("NDE index file (`main.idx', e.g.)")
                         .index(1)
                         .requires("data")
-                        .required(true),
+                        .required(true)
+                        .value_parser(value_parser!(std::path::PathBuf)),
                 )
                 .arg(
-                    Arg::with_name("data")
-                        .about("corresponding NDE data file (`main.dat', e.g.)")
+                    Arg::new("data")
+                        .help("corresponding NDE data file (`main.dat', e.g.)")
                         .index(2)
-                        .required(true),
+                        .required(true)
+                        .value_parser(value_parser!(std::path::PathBuf)),
                 ),
         )
         .get_matches();
 
-    let filter = if matches.is_present("verbose") {
+    let filter = if matches.get_flag("verbose") {
         LevelFilter::Debug
     } else {
         LevelFilter::Info
@@ -268,28 +273,42 @@ be written",
     log4rs::init_config(cfg)?;
 
     if let Some(subm) = matches.subcommand_matches("dump") {
-        let format = subm.value_of("format").ok_or(Error::new(Cause::Internal))?;
+        let format = subm
+            .get_one::<String>("format")
+            .ok_or(Error::new(Cause::Internal))?;
         // We marked both of these arguments as "required" above, so `clap' *should* have checked
         // for their presence. That said, I can't bring myself to call `unwrap'.
-        let idx = subm.value_of("index").ok_or(Error::new(Cause::Internal))?;
-        let dat = subm.value_of("data").ok_or(Error::new(Cause::Internal))?;
+        let idx = subm
+            .get_one::<PathBuf>("index")
+            .ok_or(Error::new(Cause::Internal))?;
+        let dat = subm
+            .get_one::<PathBuf>("data")
+            .ok_or(Error::new(Cause::Internal))?;
         return Ok(dump(
             Path::new(idx),
             Path::new(dat),
-            DumpFormat::try_from(format)?,
+            DumpFormat::try_from(format.as_str())?,
         )?);
     } else if let Some(subm) = matches.subcommand_matches("export") {
         // We marked both of these as having default values, so `value_of` should never return
         // Err, here. That said, I can't bring myself to call `unwrap'.
-        let format = subm.value_of("format").ok_or(Error::new(Cause::Internal))?;
-        let output = subm.value_of("output").ok_or(Error::new(Cause::Internal))?;
+        let format = subm
+            .get_one::<String>("format")
+            .ok_or(Error::new(Cause::Internal))?;
+        let output = subm
+            .get_one::<PathBuf>("output")
+            .ok_or(Error::new(Cause::Internal))?;
         // We marked both of these arguments as "required" above... yadayadayada.
-        let idx = subm.value_of("index").ok_or(Error::new(Cause::Internal))?;
-        let dat = subm.value_of("data").ok_or(Error::new(Cause::Internal))?;
+        let idx = subm
+            .get_one::<PathBuf>("index")
+            .ok_or(Error::new(Cause::Internal))?;
+        let dat = subm
+            .get_one::<PathBuf>("data")
+            .ok_or(Error::new(Cause::Internal))?;
         return Ok(export(
             Path::new(idx),
             Path::new(dat),
-            ExportFormat::try_from(format)?,
+            ExportFormat::try_from(format.as_str())?,
             Path::new(output),
         )?);
     } else {
