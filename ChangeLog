@@ -1,4 +1,16 @@
-2023-05-10  Michael Herstine  <sp1ff@pobox.com>
+2023-05-16  Michael Herstine  <sp1ff@pobox.com>
+
+	replace log4rs with env-logger
+
+2023-05-12  Michael Herstine  <sp1ff@pobox.com>
+
+	Fixing the CI workflow
+
+	Standing-up a CI workflow
+
+	Merge branch 'dependabot-0.1.3'
+
+2023-05-12  Michael Herstine  <sp1ff@pobox.com>
 
 	Release 0.1.3
 	This commit:
@@ -6,6 +18,12 @@
 	    - upgrades `xnde` to clap v4
 	    - updates copyrights throughout
 	    - updates crate dependencies
+
+2023-05-12  Michael Herstine  <sp1ff@pobox.com>
+
+	Merge branch 'master' of github.com:sp1ff/xnde
+
+	Cleanup; somehow I managed to not commit 'configure.ac' last time.
 
 2023-04-29  Michael Herstine  <sp1ff@pobox.com>
 

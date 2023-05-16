@@ -23,15 +23,10 @@
 
 mod vars;
 
+use env_logger::Env;
 use xnde::{dump, export, DumpFormat, ExportFormat};
 
 use clap::{value_parser, Arg, Command};
-use log::LevelFilter;
-use log4rs::{
-    append::console::{ConsoleAppender, Target},
-    config::{Appender, Root},
-    encode::pattern::PatternEncoder,
-};
 
 // There are many crates for deriving a Display implementation; I tried
 // [withoutboats](https://boats.gitlab.io/blog/)'s
@@ -256,21 +251,14 @@ be written",
         )
         .get_matches();
 
-    let filter = if matches.get_flag("verbose") {
-        LevelFilter::Debug
-    } else {
-        LevelFilter::Info
-    };
-
-    let app = ConsoleAppender::builder()
-        .target(Target::Stdout)
-        .encoder(Box::new(PatternEncoder::new("{m}{n}")))
-        .build();
-    let cfg = log4rs::config::Config::builder()
-        .appender(Appender::builder().build("stdout", Box::new(app)))
-        .build(Root::builder().appender("stdout").build(filter))
-        .unwrap();
-    log4rs::init_config(cfg)?;
+    env_logger::init_from_env(Env::default().filter_or(
+        "RUST_LOG",
+        if matches.get_flag("verbose") {
+            "debug"
+        } else {
+            "info"
+        },
+    ));
 
     if let Some(subm) = matches.subcommand_matches("dump") {
         let format = subm

@@ -15,8 +15,8 @@ exclude = ["Cargo.toml.in", "Makefile", "Makefile.in"]
 [dependencies]
 backtrace = "0.3"
 clap = "4.2.5"
+env_logger = "0.10.0"
 log = "0.4.8"
-log4rs = "0.10.0"
 os_str_bytes = "2.4.0"
 parse-display = "0.1.1"
 serde = { version = "1.0", features = ["derive"] }

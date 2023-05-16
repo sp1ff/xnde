@@ -1,4 +1,4 @@
-AC_INIT([xnde], [0.1.3], [sp1ff@pobox.com])
+AC_INIT([xnde], [0.1.4], [sp1ff@pobox.com])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([xnde/Cargo.toml.in])
 AM_INIT_AUTOMAKE([-Wall -Werror -Wno-portability -Wno-override gnits std-options dist-xz dist-zstd])
