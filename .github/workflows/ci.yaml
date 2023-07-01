@@ -62,15 +62,19 @@ jobs:
       run: |
           pwd
           set -x
-          # Failure to do so causes `brew update` to fail
-          rm '/usr/local/bin/2to3-3.11'
-          rm '/usr/local/bin/2to3'
-          rm '/usr/local/bin/idle3.11'
-          rm '/usr/local/bin/idle3'
+          # This seems awful. The key *seems* to be whether or not
+          # `brew upgrade succeeds`. I can't help but feel that this
+          # job will break again in a few days, however.
+          set +e
           brew update
-          # brew upgrade <==: fails on Virtual Box(?)
+          brew cleanup
+          # Will exit with non-zero status if it finds problems, but
+          # can be handy for trouble-shooting:
+          brew doctor
+          brew upgrade
           brew install autoconf automake make
           eval "$(/usr/libexec/path_helper)"
+          set -e
 
     - name: Install Rust
       uses: actions-rs/toolchain@v1
